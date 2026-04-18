@@ -1,73 +1,55 @@
-# Welcome to your Lovable project
+# NAMMA TRADE - Procurement & B2B Platform
 
-## Project info
+A modern, full-stack procurement platform designed to connect Warehouses, Vendors, and Consumers in a seamless e-commerce ecosystem.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Overview
 
-## How can I edit this code?
+NAMMA TRADE streamlines the supply chain by providing dedicated portals for different users:
+- **Administrators**: Global oversight of users, products, and system health.
+- **Warehouse Managers**: Inventory tracking, procurement approval, and logistics coordination.
+- **Vendors**: Product listing with MRP/MOP validation and order fulfillment.
+- **Consumers**: Retail shopping with live tracking and order history.
 
-There are several ways of editing your application.
+## 🛠️ Technology Stack
 
-**Use Lovable**
+- **Frontend**: Vite + React + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Backend/Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Auth with Role-Based Access Control (RBAC)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 📦 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Local Development
 
-**Use your preferred IDE**
+1. **Clone the repository**:
+   ```sh
+   git clone https://github.com/shyamspark19/NammaTrade002.git
+   cd NammaTrade002
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Install dependencies**:
+   ```sh
+   npm install
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Set up Environment Variables**:
+   Create a `.env` file in the root and add your Supabase credentials:
+   ```sh
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+   ```
 
-Follow these steps:
+4. **Start the dev server**:
+   ```sh
+   npm run dev
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🌐 Deployment
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The project is configured for deployment on **Vercel** or **Netlify**:
+- Use the provided `vercel.json` for Vercel SPA routing.
+- Use `netlify.toml` and `_redirects` for Netlify SPA routing.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📄 License
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Proprietary - NAMMA TRADE. All rights reserved.
