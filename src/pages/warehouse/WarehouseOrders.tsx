@@ -66,73 +66,22 @@ export default function WarehouseOrders() {
     }
   };
 
-  const handleApproveProcurement = async (order: any) => {
-    if (!order.buyer_id || !order.product_id) return;
-    
-    const toastId = toast.loading('Processing procurement transfer...');
+  const handleApproveOrder = async (order: any) => {
+    const toastId = toast.loading('Finalizing order approval...');
     try {
-      // 1. Verify this is indeed a vendor (security check)
-      // Use the has_role RPC because the Warehouse role cannot directly query other users' roles due to RLS.
-      const { data: isVendor, error: roleErr } = await supabase.rpc('has_role', { 
-        _user_id: order.buyer_id, 
-        _role: 'vendor' 
+      // We now delegate the heavy lifting (stock transfer and status updates) 
+      // to a secure database function. This solves the RLS permissions issues
+      // and ensures atomic updates.
+      const { error } = await supabase.rpc('process_order_approval', { 
+        p_order_id: order.id 
       });
       
-      if (roleErr || !isVendor) {
-        throw new Error('This order is not from a registered vendor or verified role.');
-      }
+      if (error) throw error;
 
-      // 2. Verify Warehouse Stock
-      const { data: whStock, error: whErr } = await (supabase.from('inventory' as any) as any)
-        .select('id, quantity')
-        .eq('warehouse_id', user?.id)
-        .eq('product_id', order.product_id)
-        .single();
-      
-      if (whErr || !whStock) throw new Error('Warehouse stock record not found');
-      if (whStock.quantity < order.quantity) throw new Error('Insufficient stock in warehouse');
-
-      // 3. Decrement Warehouse Stock
-      const { error: decErr } = await (supabase.from('inventory' as any) as any)
-        .update({ quantity: whStock.quantity - order.quantity })
-        .eq('id', whStock.id);
-      
-      if (decErr) throw decErr;
-
-      // 4. Upsert Vendor Inventory
-      const { data: vInv } = await (supabase.from('vendor_inventory' as any) as any)
-        .select('id, stock')
-        .eq('vendor_id', order.buyer_id)
-        .eq('product_id', order.product_id)
-        .limit(1);
-      
-      if (vInv && vInv.length > 0) {
-        const { error: upErr } = await (supabase.from('vendor_inventory' as any) as any)
-          .update({ stock: Number(vInv[0].stock) + order.quantity })
-          .eq('id', vInv[0].id);
-        if (upErr) throw upErr;
-      } else {
-        const { error: insErr } = await (supabase.from('vendor_inventory' as any) as any)
-          .insert({
-            vendor_id: order.buyer_id,
-            product_id: order.product_id,
-            stock: order.quantity,
-            retail_price: order.products?.retail_mop || order.products?.retail_mrp || 0,
-            status: 'active'
-          });
-        if (insErr) throw insErr;
-      }
-
-      // 5. Update Order Status
-      const { error: statErr } = await (supabase.from('orders' as any) as any)
-        .update({ status: 'delivered' })
-        .eq('id', order.id);
-      
-      if (statErr) throw statErr;
-
-      toast.success('Procurement request approved!', { id: toastId });
+      toast.success('Order approved successfully!', { id: toastId });
       fetchOrders();
     } catch (err: any) {
+      console.error("Approval error:", err);
       toast.error('Approval failed: ' + err.message, { id: toastId });
     }
   };
@@ -366,7 +315,7 @@ export default function WarehouseOrders() {
                                 variant="ghost" 
                                 size="icon" 
                                 className="text-success hover:bg-success/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={() => handleApproveProcurement(order)}
+                                onClick={() => handleApproveOrder(order)}
                                 title="Approve Request"
                               >
                                 <CheckCircle2 className="h-4 w-4" />
